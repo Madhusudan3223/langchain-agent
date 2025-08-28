@@ -1,2 +1,2 @@
-langchain
-langgraph
+langgraph==0.1.0
+pyyaml==6.0.2
