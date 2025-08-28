@@ -1,0 +1,129 @@
+# Lang Graph Agent Configuration for a Customer Support Workflow
+# Agent Persona: Langie
+
+agent_details:
+  name: "Langie"
+  description: "A structured and logical Lang Graph Agent designed to process customer support workflows through a series of graph-based stages."
+  version: 1.0
+
+input_schema:
+  description: "Defines the structure of the incoming customer query payload."
+  properties:
+    customer_name:
+      type: "string"
+    email:
+      type: "string"
+    query:
+      type: "string"
+    priority:
+      type: "string"
+    ticket_id:
+      type: "integer"
+  required: ["customer_name", "email", "query", "ticket_id"]
+
+workflow_stages:
+  - stage: 1
+    name: "INTAKE"
+    mode: "deterministic"
+    prompt: "Accept the incoming customer payload and initialize the state."
+    abilities:
+      - name: "accept_payload"
+        server: "State Management"
+
+  - stage: 2
+    name: "UNDERSTAND"
+    mode: "deterministic"
+    prompt: "Parse the request text and extract key entities from the query."
+    abilities:
+      - name: "parse_request_text"
+        server: "COMMON"
+      - name: "extract_entities"
+        server: "ATLAS"
+
+  - stage: 3
+    name: "PREPARE"
+    mode: "deterministic"
+    prompt: "Normalize fields, enrich records with historical data, and add calculated flags."
+    abilities:
+      - name: "normalize_fields"
+        server: "COMMON"
+      - name: "enrich_records"
+        server: "ATLAS"
+      - name: "add_flags_calculations"
+        server: "COMMON"
+
+  - stage: 4
+    name: "ASK"
+    mode: "deterministic"
+    prompt: "Determine if more information is needed and formulate a clarifying question for the user."
+    abilities:
+      - name: "clarify_question"
+        server: "ATLAS"
+
+  - stage: 5
+    name: "WAIT"
+    mode: "deterministic"
+    prompt: "Wait for the user's response, then extract and store the answer."
+    abilities:
+      - name: "extract_answer"
+        server: "ATLAS"
+      - name: "store_answer"
+        server: "State Management"
+
+  - stage: 6
+    name: "RETRIEVE"
+    mode: "deterministic"
+    prompt: "Search the knowledge base for relevant articles or FAQs."
+    abilities:
+      - name: "knowledge_base_search"
+        server: "ATLAS"
+      - name: "store_data"
+        server: "State Management"
+
+  - stage: 7
+    name: "DECIDE"
+    mode: "non-deterministic"
+    prompt: "Score potential solutions and escalate if the score is less than 90."
+    abilities:
+      - name: "solution_evaluation"
+        server: "COMMON"
+      - name: "escalation_decision"
+        server: "ATLAS"
+      - name: "update_payload"
+        server: "State Management"
+
+  - stage: 8
+    name: "UPDATE"
+    mode: "deterministic"
+    prompt: "Update ticket fields and close the ticket if the issue is resolved."
+    abilities:
+      - name: "update_ticket"
+        server: "ATLAS"
+      - name: "close_ticket"
+        server: "ATLAS"
+
+  - stage: 9
+    name: "CREATE"
+    mode: "deterministic"
+    prompt: "Generate a final response to send to the customer."
+    abilities:
+      - name: "response_generation"
+        server: "COMMON"
+
+  - stage: 10
+    name: "DO"
+    mode: "deterministic"
+    prompt: "Execute necessary API calls and trigger notifications."
+    abilities:
+      - name: "execute_api_calls"
+        server: "ATLAS"
+      - name: "trigger_notifications"
+        server: "ATLAS"
+
+  - stage: 11
+    name: "COMPLETE"
+    mode: "deterministic"
+    prompt: "Finalize the workflow and output the final structured payload."
+    abilities:
+      - name: "output_payload"
+        server: "State Management"
