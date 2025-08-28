@@ -30,10 +30,8 @@ The agent, named **Langie**, processes customer queries across **11 stages**, pe
 - **Structured Final Payload** with ticket details, decision, solution score, customer response, and full logs.  
 
 ---
+ Author
 
-## 🛠 Setup
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Madhusudan3223/langchain-agent.git
-cd langchain-agent
+Madhusudan Mandal
+madhumandal49@gmail.com
+ +91 9304190347
